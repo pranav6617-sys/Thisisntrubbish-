@@ -164,14 +164,17 @@
 
 <script>
   var anchor = new Date(2026, 5, 15); // Mon 15 Jun 2026 = PLASTIC week
-  function mondayOf(d){
+  // Week "starts" Saturday: Sat/Sun count as the upcoming collection week.
+  function weekStart(d){
     var x = new Date(d);
-    var day = (x.getDay() + 6) % 7;
     x.setHours(0,0,0,0);
-    x.setDate(x.getDate() - day);
+    var day = x.getDay();              // 0=Sun..6=Sat
+    var sinceSat = (day + 1) % 7;      // days since most recent Saturday
+    x.setDate(x.getDate() - sinceSat); // back to Saturday
+    x.setDate(x.getDate() + 2);        // label as that week's Monday
     return x;
   }
-  var weeksSince = Math.round((mondayOf(new Date()) - mondayOf(anchor)) / (7 * 86400000));
+  var weeksSince = Math.round((weekStart(new Date()) - anchor) / (7 * 86400000));
   var offset = ((weeksSince % 2) + 2) % 2;
   var isGlass = (offset === 1); // anchor week (offset 0) = plastic
 
@@ -181,7 +184,7 @@
   stage.appendChild(tpl.content.cloneNode(true));
   document.getElementById('themeColor').setAttribute('content', isGlass ? '#9FD8C6' : '#F2A9C4');
 
-  var mon = mondayOf(new Date());
+  var mon = weekStart(new Date());
   var ds = mon.toLocaleDateString('en-NZ', { day: 'numeric', month: 'short' });
   stage.querySelector('.kicker').textContent = 'Week of ' + ds;
 
