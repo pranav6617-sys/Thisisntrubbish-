@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>This Isn't Rubbish</title>
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="This Isn't Rubbish">
+<meta name="theme-color" content="#BFE8DA" id="themeColor">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' rx='40' fill='%23BFE8DA'/%3E%3Cpath d='M76 36h28v22c0 8 4 13 11 19 9 8 13 19 13 31v52c0 13-10 22-23 22H71c-13 0-23-9-23-22V108c0-12 4-23 13-31 7-6 11-11 11-19V36z' fill='%23E2F5EF' stroke='%23151126' stroke-width='7' stroke-linejoin='round'/%3E%3Crect x='77' y='24' width='26' height='14' rx='5' fill='%23151126'/%3E%3Cpath d='M62 132c18-8 36 8 56 0v34c0 8-6 14-14 14H76c-8 0-14-6-14-14z' fill='%235FB8A0'/%3E%3Ccircle cx='80' cy='96' r='3' fill='%23151126'/%3E%3Ccircle cx='100' cy='96' r='3' fill='%23151126'/%3E%3Cpath d='M84 108c4 4 10 4 14 0' stroke='%23151126' stroke-width='4' fill='none' stroke-linecap='round'/%3E%3C/svg%3E">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Mochiy+Pop+One&display=swap');
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  html,body{height:100%;}
+  body{font-family:'Fredoka',sans-serif;display:flex;min-height:100vh;min-height:100dvh;overflow:hidden;user-select:none;}
+
+  .stage{position:relative;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    padding:max(20px,env(safe-area-inset-top)) 18px max(20px,env(safe-area-inset-bottom));}
+  .stage.glass{background:#9FD8C6;} .stage.plastic{background:#F2A9C4;}
+
+  /* ===== the trading card ===== */
+  .card{position:relative;width:min(92vw,400px);height:min(82vh,640px);border-radius:34px;
+    border:5px solid #151126;overflow:hidden;box-shadow:10px 12px 0 rgba(21,17,38,.30);}
+  .stage.glass .card{background:#CFEEE4;} .stage.plastic .card{background:#FBD3E0;}
+
+  .grid{position:absolute;inset:0;background-size:30px 30px;opacity:.7;}
+  .glass .grid{background-image:linear-gradient(#8ccdba 1.5px,transparent 1.5px),linear-gradient(90deg,#8ccdba 1.5px,transparent 1.5px);}
+  .plastic .grid{background-image:linear-gradient(#f2a9c4 1.5px,transparent 1.5px),linear-gradient(90deg,#f2a9c4 1.5px,transparent 1.5px);}
+
+  /* corner label, blocky grid font */
+  .tag{position:absolute;top:18px;right:20px;font-family:'Mochiy Pop One',sans-serif;
+    font-size:40px;line-height:1;z-index:4;letter-spacing:.02em;
+    text-shadow:3px 3px 0 #fff;}
+  .glass .tag{color:#2f8d74;} .plastic .tag{color:#e0608f;}
+  .kicker{position:absolute;top:22px;left:20px;z-index:4;font-size:12px;font-weight:600;
+    letter-spacing:.16em;text-transform:uppercase;background:#151126;color:#fff;padding:5px 12px;border-radius:20px;}
+
+  /* doodles */
+  .doodle{position:absolute;z-index:2;}
+  .float{animation:floaty 5s ease-in-out infinite;}
+  .float.f2{animation-duration:6.4s;animation-delay:.5s;}
+  .float.f3{animation-duration:5.8s;animation-delay:1s;}
+  .float.f4{animation-duration:7s;animation-delay:1.6s;}
+  .float.f5{animation-duration:6s;animation-delay:.3s;}
+  .spin{animation:spin 13s linear infinite;}
+  @keyframes floaty{0%,100%{transform:translateY(0) rotate(var(--r,0deg));}50%{transform:translateY(-13px) rotate(var(--r,0deg));}}
+  @keyframes spin{to{transform:rotate(360deg);}}
+
+  /* character */
+  .char-wrap{position:absolute;left:50%;top:52%;transform:translate(-50%,-50%);
+    width:62%;height:64%;cursor:pointer;z-index:3;}
+  svg.char{width:100%;height:100%;overflow:visible;display:block;}
+
+  /* verdict + copy under card */
+  .verdict{font-family:'Mochiy Pop One',sans-serif;font-size:46px;color:#151126;line-height:1;
+    margin-top:16px;z-index:5;text-shadow:4px 4px 0 #fff,7px 7px 0 rgba(21,17,38,.22);
+    opacity:0;transform:translateY(20px) scale(.85) rotate(-3deg);
+    animation:pop .8s cubic-bezier(.18,1.6,.4,1) .25s forwards;}
+  @keyframes pop{to{opacity:1;transform:none;}}
+  .bin-line{font-family:'Mochiy Pop One',sans-serif;font-size:15px;color:#151126;z-index:5;margin-top:12px;
+    background:#fff;border:3px solid #151126;border-radius:30px;padding:6px 16px;box-shadow:3px 3px 0 #151126;
+    opacity:0;animation:fade .6s ease .55s forwards;}
+  .prep{font-size:13px;font-weight:600;z-index:5;text-align:center;margin-top:9px;
+    opacity:0;animation:fade .6s ease .7s forwards;}
+  .glass .prep{color:#236253;} .plastic .prep{color:#b1496f;}
+  @keyframes fade{to{opacity:1;}}
+  .cal-link{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);font-size:11px;font-weight:600;
+    color:#151126;opacity:.45;text-decoration:none;border-bottom:1.5px solid currentColor;z-index:6;}
+
+  /* motion */
+  .sway{transform-origin:50% 95%;animation:sway 3.6s ease-in-out infinite;}
+  .liquid{transform-origin:50% 100%;animation:slosh 3.6s ease-in-out infinite;}
+  .sticker1{transform-origin:50% 0%;animation:swing 2.8s ease-in-out infinite;}
+  .drip{animation:drip 3.2s ease-in infinite;}
+  .bub{animation:rise 4s ease-in-out infinite;} .bub.b2{animation-duration:5s;animation-delay:.6s;} .bub.b3{animation-duration:4.6s;animation-delay:1.2s;}
+  @keyframes sway{0%,100%{transform:rotate(-3deg);}50%{transform:rotate(3deg);}}
+  @keyframes slosh{0%,100%{transform:rotate(2deg) translateX(4px);}50%{transform:rotate(-2deg) translateX(-4px);}}
+  @keyframes swing{0%,100%{transform:rotate(-9deg);}50%{transform:rotate(9deg);}}
+  @keyframes drip{0%{transform:translateY(0);opacity:0;}20%{opacity:1;}100%{transform:translateY(34px);opacity:0;}}
+  @keyframes rise{0%{transform:translateY(0);opacity:.5;}50%{transform:translateY(-22px);opacity:.85;}100%{transform:translateY(-44px);opacity:0;}}
+  .char-wrap.boing .sway{animation:boing .6s cubic-bezier(.2,1.4,.4,1);}
+  @keyframes boing{0%{transform:scale(1,1) rotate(0);}25%{transform:scale(1.12,.86) rotate(-2deg);}55%{transform:scale(.92,1.12) rotate(2deg);}78%{transform:scale(1.04,.97) rotate(-1deg);}100%{transform:scale(1,1) rotate(0);}}
+  @media (prefers-reduced-motion:reduce){.sway,.liquid,.sticker1,.bub,.float,.spin,.drip{animation:none;}}
+</style>
+</head>
+<body>
+<div class="stage" id="stage"></div>
+
+<!-- ============ GLASS ============ -->
+<template id="tplGlass">
+  <div class="card">
+    <div class="grid"></div>
+    <div class="kicker">This week</div>
+    <div class="tag">GLASS</div>
+
+    <!-- floating doodles -->
+    <svg class="doodle float" style="top:11%;left:7%;width:40px;" viewBox="0 0 40 40"><path d="M20 2 L24 16 L38 20 L24 24 L20 38 L16 24 L2 20 L16 16Z" fill="#5FB8A0" stroke="#151126" stroke-width="3" stroke-linejoin="round"/></svg>
+    <svg class="doodle float f3" style="bottom:24%;right:8%;width:30px;" viewBox="0 0 40 40"><path d="M20 2 L24 16 L38 20 L24 24 L20 38 L16 24 L2 20 L16 16Z" fill="#6FB8C9" stroke="#151126" stroke-width="3" stroke-linejoin="round"/></svg>
+    <svg class="doodle spin" style="top:20%;right:9%;width:42px;" viewBox="0 0 50 50"><circle cx="25" cy="25" r="20" fill="#3FB6C9" stroke="#151126" stroke-width="4"/><circle cx="25" cy="25" r="11" fill="none" stroke="#151126" stroke-width="3" stroke-dasharray="4 4"/></svg>
+    <svg class="doodle spin" style="bottom:14%;left:9%;width:30px;animation-duration:9s;" viewBox="0 0 50 50"><circle cx="25" cy="25" r="20" fill="#79C2A6" stroke="#151126" stroke-width="4"/><circle cx="25" cy="25" r="11" fill="none" stroke="#151126" stroke-width="3" stroke-dasharray="4 4"/></svg>
+    <svg class="doodle float f2" style="top:46%;left:5%;width:26px;--r:8deg;" viewBox="0 0 30 40"><path d="M15 2 C24 18 28 26 28 31 A13 13 0 1 1 2 31 C2 26 6 18 15 2Z" fill="#9CC9F0" stroke="#151126" stroke-width="3"/></svg>
+    <svg class="doodle float f4" style="bottom:30%;left:7%;width:20px;--r:-10deg;" viewBox="0 0 30 40"><path d="M15 2 C24 18 28 26 28 31 A13 13 0 1 1 2 31 C2 26 6 18 15 2Z" fill="#6FB8C9" stroke="#151126" stroke-width="3"/></svg>
+
+    <div class="char-wrap" data-char>
+      <svg class="char" viewBox="0 0 330 430">
+        <ellipse cx="165" cy="416" rx="80" ry="11" fill="#151126" opacity=".14"/>
+        <!-- base splash -->
+        <path d="M70 400 C60 384 86 380 96 396 M250 398 C262 380 286 388 276 404" stroke="#5FB8A0" stroke-width="6" fill="none" stroke-linecap="round"/>
+        <g class="sway">
+          <path d="M133 36 H197 V92 C197 110 207 122 222 136 C247 158 258 192 258 226 V356 C258 388 232 410 200 410 H130 C98 410 72 388 72 356 V226 C72 192 83 158 108 136 C123 122 133 110 133 92 Z" fill="#E2F5EF" stroke="#151126" stroke-width="9" stroke-linejoin="round"/>
+          <rect x="135" y="14" width="60" height="30" rx="9" fill="#151126"/>
+          <clipPath id="gclip"><path d="M133 36 H197 V92 C197 110 207 122 222 136 C247 158 258 192 258 226 V356 C258 388 232 410 200 410 H130 C98 410 72 388 72 356 V226 C72 192 83 158 108 136 C123 122 133 110 133 92 Z"/></clipPath>
+          <g clip-path="url(#gclip)"><g class="liquid">
+            <path d="M50 300 C95 282 130 312 165 300 C205 286 245 300 285 300 L285 430 L50 430 Z" fill="#5FB8A0"/>
+            <path d="M50 300 C95 282 130 312 165 300 C205 286 245 300 285 300" fill="none" stroke="#151126" stroke-width="6" opacity=".5"/>
+          </g></g>
+          <path d="M104 150 C86 185 88 250 88 330" stroke="#fff" stroke-width="12" stroke-linecap="round" opacity=".8"/>
+          <!-- kawaii face on bottle -->
+          <g transform="translate(165 250)">
+            <path d="M-44 -6 C-44 4 -36 11 -27 11 C-18 11 -10 4 -10 -6" stroke="#151126" stroke-width="7" fill="none" stroke-linecap="round"/>
+            <path d="M10 -6 C10 4 18 11 27 11 C36 11 44 4 44 -6" stroke="#151126" stroke-width="7" fill="none" stroke-linecap="round"/>
+            <ellipse cx="-27" cy="20" rx="11" ry="7" fill="#F8A6CF" opacity=".7"/>
+            <ellipse cx="27" cy="20" rx="11" ry="7" fill="#F8A6CF" opacity=".7"/>
+            <path d="M-12 26 C-4 34 4 34 12 26" stroke="#151126" stroke-width="7" fill="none" stroke-linecap="round"/>
+          </g>
+          <circle class="bub" cx="195" cy="348" r="9" fill="#fff" opacity=".5" stroke="#151126" stroke-width="4"/>
+          <circle class="bub b2" cx="150" cy="368" r="6" fill="#fff" opacity=".5" stroke="#151126" stroke-width="3"/>
+          <circle class="bub b3" cx="212" cy="380" r="5" fill="#fff" opacity=".5" stroke="#151126" stroke-width="3"/>
+        </g>
+        <!-- drip off cap -->
+        <circle class="drip" cx="165" cy="60" r="6" fill="#5FB8A0" stroke="#151126" stroke-width="3"/>
+      </svg>
+    </div>
+  </div>
+
+  <div class="verdict">Glass</div>
+  <div class="bin-line">Goes in the crate 🟢</div>
+  <div class="prep">Bottles &amp; jars only · rinse · lids off</div>
+</template>
+
+<!-- ============ PLASTIC (tin can) ============ -->
+<template id="tplPlastic">
+  <div class="card">
+    <div class="grid"></div>
+    <div class="kicker">This week</div>
+    <div class="tag">PLASTIC</div>
+
+    <svg class="doodle float" style="top:11%;left:7%;width:38px;--r:-8deg;" viewBox="0 0 40 38"><path d="M20 36 C-8 18 4 0 20 12 C36 0 48 18 20 36Z" fill="#F47CA4" stroke="#151126" stroke-width="3" stroke-linejoin="round"/></svg>
+    <svg class="doodle float f3" style="bottom:24%;right:8%;width:28px;--r:10deg;" viewBox="0 0 40 38"><path d="M20 36 C-8 18 4 0 20 12 C36 0 48 18 20 36Z" fill="#F8A6CF" stroke="#151126" stroke-width="3" stroke-linejoin="round"/></svg>
+    <svg class="doodle spin" style="top:20%;right:9%;width:42px;" viewBox="0 0 50 50"><path d="M25 9 a16 16 0 1 1-11 5" fill="none" stroke="#151126" stroke-width="5" stroke-linecap="round"/><path d="M25 3 L33 11 L23 15Z" fill="#151126"/></svg>
+    <svg class="doodle float f2" style="top:45%;left:5%;width:30px;--r:6deg;" viewBox="0 0 40 50"><path d="M20 48 C6 42 4 26 20 16 C36 26 34 42 20 48Z" fill="#F0506E" stroke="#151126" stroke-width="3"/><path d="M12 16 L20 6 L28 16 C24 13 16 13 12 16Z" fill="#6FBF73" stroke="#151126" stroke-width="3" stroke-linejoin="round"/></svg>
+    <svg class="doodle float f5" style="bottom:14%;left:9%;width:22px;--r:-12deg;" viewBox="0 0 40 38"><path d="M20 36 C-8 18 4 0 20 12 C36 0 48 18 20 36Z" fill="#F47CA4" stroke="#151126" stroke-width="3" stroke-linejoin="round"/></svg>
+    <svg class="doodle float f4" style="bottom:31%;left:6%;width:18px;" viewBox="0 0 40 40"><path d="M20 2 L24 16 L38 20 L24 24 L20 38 L16 24 L2 20 L16 16Z" fill="#FFF07A" stroke="#151126" stroke-width="3" stroke-linejoin="round"/></svg>
+
+    <div class="char-wrap" data-char>
+      <svg class="char" viewBox="0 0 330 430">
+        <ellipse cx="165" cy="416" rx="86" ry="11" fill="#151126" opacity=".14"/>
+        <path d="M64 400 C54 384 80 380 90 396 M256 398 C268 380 292 388 282 404" stroke="#F47CA4" stroke-width="6" fill="none" stroke-linecap="round"/>
+        <g class="sway">
+          <!-- tin can body -->
+          <rect x="88" y="70" width="154" height="320" rx="16" fill="#D8DDE3" stroke="#151126" stroke-width="9"/>
+          <!-- top rim -->
+          <ellipse cx="165" cy="78" rx="77" ry="20" fill="#ECEFF2" stroke="#151126" stroke-width="9"/>
+          <!-- ribs -->
+          <g stroke="#151126" stroke-width="4" opacity=".45">
+            <path d="M92 120 H238"/><path d="M92 150 H238"/><path d="M92 250 H238"/><path d="M92 280 H238"/><path d="M92 340 H238"/>
+          </g>
+          <!-- shine -->
+          <rect x="112" y="100" width="14" height="270" rx="7" fill="#fff" opacity=".7"/>
+          <!-- kawaii face -->
+          <g transform="translate(165 215)">
+            <path d="M-42 -6 C-42 4 -34 11 -25 11 C-16 11 -8 4 -8 -6" stroke="#151126" stroke-width="7" fill="none" stroke-linecap="round"/>
+            <path d="M8 -6 C8 4 16 11 25 11 C34 11 42 4 42 -6" stroke="#151126" stroke-width="7" fill="none" stroke-linecap="round"/>
+            <ellipse cx="-25" cy="20" rx="11" ry="7" fill="#F47CA4" opacity=".75"/>
+            <ellipse cx="25" cy="20" rx="11" ry="7" fill="#F47CA4" opacity=".75"/>
+            <path d="M-11 26 C-3 34 5 34 12 26" stroke="#151126" stroke-width="7" fill="none" stroke-linecap="round"/>
+          </g>
+        </g>
+        <circle class="drip" cx="200" cy="92" r="5" fill="#F47CA4" stroke="#151126" stroke-width="3"/>
+      </svg>
+    </div>
+  </div>
+
+  <div class="verdict">Plastic</div>
+  <div class="bin-line">Goes in the bag 🟡</div>
+  <div class="prep">Bottles, tubs (1·2·5), paper, cans · rinse</div>
+</template>
+
+<script>
+  const anchor=new Date(2026,5,15); // 15 Jun 2026 = PLASTIC week
+  function mondayOf(d){const x=new Date(d);const day=(x.getDay()+6)%7;x.setHours(0,0,0,0);x.setDate(x.getDate()-day);return x;}
+  const weeksSince=Math.round((mondayOf(new Date())-mondayOf(anchor))/(7*864e5));
+  const isGlass=((weeksSince%2)+2)%2===1;
+
+  const stage=document.getElementById('stage');
+  stage.classList.add(isGlass?'glass':'plastic');
+  stage.appendChild(document.getElementById(isGlass?'tplGlass':'tplPlastic').content.cloneNode(true));
+  document.getElementById('themeColor').setAttribute('content',isGlass?'#9FD8C6':'#F2A9C4');
+
+  const link=document.createElement('a');
+  link.className='cal-link';
+  link.href='https://wellington.govt.nz/rubbish-recycling-and-waste/when-to-put-out-your-rubbish-and-recycling';
+  link.target='_blank';link.textContent='official calendar';
+  stage.appendChild(link);
+
+  const cw=stage.querySelector('[data-char]');
+  cw.addEventListener('click',()=>{cw.classList.remove('boing');void cw.offsetWidth;cw.classList.add('boing');});
+</script>
+</body>
+</html>
